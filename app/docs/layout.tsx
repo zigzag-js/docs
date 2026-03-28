@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               chains: '@zig-zag/chains',
               'better-siwp': '@zig-zag/better-siwp',
             };
-            const id = node.name?.toLowerCase() ?? '';
+            const id = String(node.name ?? '').toLowerCase();
             if (meta[id]) {
               option.title = meta[id];
             }

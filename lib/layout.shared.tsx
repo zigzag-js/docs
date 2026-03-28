@@ -16,6 +16,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         type: 'icon',
+        text: 'GitHub',
         label: 'GitHub',
         icon: (
           <svg viewBox="0 0 24 24" fill="currentColor" className="size-5">
@@ -27,6 +28,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         type: 'icon',
+        text: 'npm',
         label: 'npm',
         icon: (
           <svg viewBox="0 0 24 24" fill="currentColor" className="size-5">

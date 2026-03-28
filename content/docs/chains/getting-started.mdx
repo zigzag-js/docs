@@ -1,0 +1,63 @@
+---
+title: Getting Started
+description: Install and start using @zig-zag/chains in your project.
+---
+
+## Installation
+
+```bash
+npm i @zig-zag/chains
+```
+
+## Basic Usage
+
+Import any chain directly by name:
+
+```ts
+import { polkadot, kusama, moonbeam } from '@zig-zag/chains';
+
+// Access chain metadata
+console.log(polkadot.name);         // "Polkadot"
+console.log(polkadot.symbol);       // "DOT"
+console.log(polkadot.decimals);     // 10
+console.log(polkadot.ss58Format);   // 0
+console.log(polkadot.genesisHash);  // "0x91b171..."
+```
+
+## Using Chain Logos
+
+Every chain includes a base64-encoded SVG logo:
+
+```tsx
+import { polkadot } from '@zig-zag/chains';
+
+function ChainIcon() {
+  return <img src={polkadot.chainIconUrl} alt={polkadot.name} />;
+}
+```
+
+## Connecting to RPCs
+
+RPCs are organized by provider name:
+
+```ts
+import { polkadot } from '@zig-zag/chains';
+
+// Named providers
+const ws = polkadot.rpcs.Dwellir;    // "wss://polkadot-rpc.dwellir.com"
+const ws2 = polkadot.rpcs.OnFinality; // "wss://polkadot.api.onfinality.io/public-ws"
+
+// Get all RPC URLs as an array
+const allRpcs = Object.values(polkadot.rpcs);
+```
+
+## Getting All Chains
+
+```ts
+import { allChains } from '@zig-zag/chains';
+
+// Array of all chain objects
+allChains.forEach((chain) => {
+  console.log(`${chain.name} (${chain.symbol})`);
+});
+```

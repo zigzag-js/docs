@@ -1,0 +1,6 @@
+{
+  "title": "@zig-zag/better-siwp",
+  "description": "Sign In With Polkadot plugin for Better Auth",
+  "root": true,
+  "pages": ["index", "server-setup", "client-setup", "examples"]
+}

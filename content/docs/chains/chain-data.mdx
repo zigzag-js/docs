@@ -1,0 +1,46 @@
+---
+title: Chain Data Model
+description: The shape of chain objects in @zig-zag/chains.
+---
+
+## Chain Interface
+
+Every chain export conforms to the `Chain` interface:
+
+```ts
+interface Chain {
+  id: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  ss58Format: number;
+  genesisHash: string;
+  chainIconUrl?: string;
+  rpcs: Record<string, string>;
+  subscanUrl?: string;
+  lightClientUrl?: string;
+  topology: 'relay' | 'system' | 'parachain' | 'testnet';
+  relay?: string;
+}
+```
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Unique chain identifier (e.g. `"polkadot"`) |
+| `name` | `string` | Human-readable name |
+| `symbol` | `string` | Native token symbol |
+| `decimals` | `number` | Token decimal places |
+| `ss58Format` | `number` | SS58 address prefix |
+| `genesisHash` | `string` | Genesis block hash |
+| `chainIconUrl` | `string` | Base64 SVG data URI for the chain logo |
+| `rpcs` | `Record<string, string>` | Named RPC endpoints |
+| `subscanUrl` | `string` | Subscan explorer URL |
+| `lightClientUrl` | `string` | Smoldot light client chain spec URL |
+| `topology` | `string` | Network role: relay, system, parachain, or testnet |
+| `relay` | `string` | Parent relay chain ID (for parachains) |
+
+## Supported Chains
+
+Relay chains, system parachains, popular parachains, and testnets across Polkadot, Kusama, and Westend.

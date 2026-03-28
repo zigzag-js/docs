@@ -1,0 +1,6 @@
+{
+  "title": "@zig-zag/chains",
+  "description": "Typed chain registry for Polkadot SDK chains",
+  "root": true,
+  "pages": ["index", "getting-started", "chain-data", "utilities"]
+}

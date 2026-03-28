@@ -1,0 +1,65 @@
+---
+title: Examples
+description: Working example apps using @zig-zag/better-siwp.
+---
+
+## Live Demo
+
+Try the live demo at [better-siwp.vercel.app](https://better-siwp.vercel.app).
+
+## Example Repositories
+
+The [better-siwp repo](https://github.com/zigzag-js/better-siwp) includes two complete example apps:
+
+### Next.js + LunoKit
+
+Full-stack Next.js App Router with LunoKit wallet connection and Dedot.
+
+```
+examples/nextjs-lunokit/
+├── app/
+│   ├── api/auth/[...all]/route.ts   # Better Auth API routes
+│   ├── layout.tsx                    # Root layout with providers
+│   └── page.tsx                      # Sign in page
+├── lib/
+│   ├── auth.ts                       # Server-side auth config
+│   └── auth-client.ts                # Client-side auth config
+└── package.json
+```
+
+**Stack:** Next.js, Better Auth, LunoKit, Dedot, Drizzle, PostgreSQL
+
+### Next.js + @polkadot/extension-dapp
+
+Next.js App Router using the classic `@polkadot/extension-dapp` for wallet connection.
+
+```
+examples/nextjs-app/
+├── app/
+│   ├── api/auth/[...all]/route.ts
+│   ├── layout.tsx
+│   └── page.tsx
+├── lib/
+│   ├── auth.ts
+│   └── auth-client.ts
+└── package.json
+```
+
+**Stack:** Next.js, Better Auth, @polkadot/extension-dapp
+
+## Running Locally
+
+```bash
+git clone https://github.com/zigzag-js/better-siwp
+cd better-siwp
+
+# Install dependencies
+pnpm install
+
+# Set up environment
+cp examples/nextjs-lunokit/.env.example examples/nextjs-lunokit/.env
+# Edit .env with your DATABASE_URL and BETTER_AUTH_SECRET
+
+# Run the example
+pnpm --filter nextjs-lunokit dev
+```

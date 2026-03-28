@@ -1,0 +1,91 @@
+---
+title: Client Setup
+description: Set up the SIWP client plugin for wallet authentication.
+---
+
+## Installation
+
+```bash
+npm i @zig-zag/better-siwp better-auth
+```
+
+## Basic Setup
+
+Add the `siwpClient()` plugin to your Better Auth client:
+
+```ts title="lib/auth-client.ts"
+import { createAuthClient } from 'better-auth/client';
+import { siwpClient } from '@zig-zag/better-siwp/client';
+
+export const authClient = createAuthClient({
+  plugins: [siwpClient()],
+});
+```
+
+## Sign In Flow
+
+The client exposes a `signIn` method for SIWP:
+
+```ts
+const result = await authClient.signIn.siwp({
+  address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+  message: signedMessage,
+  signature: signature,
+});
+```
+
+## With LunoKit
+
+If you're using [LunoKit](https://github.com/Luno-lab/LunoKit) for wallet connection:
+
+```tsx
+import { useAccounts, useSignMessage } from '@luno-kit/react';
+import { authClient } from '@/lib/auth-client';
+
+function SignInButton() {
+  const accounts = useAccounts();
+  const { signMessage } = useSignMessage();
+
+  const handleSignIn = async () => {
+    const account = accounts[0];
+    if (!account) return;
+
+    // 1. Get nonce from server
+    const { nonce } = await authClient.siwp.getNonce();
+
+    // 2. Sign the message with wallet
+    const { message, signature } = await signMessage({
+      address: account.address,
+      nonce,
+    });
+
+    // 3. Verify and create session
+    await authClient.signIn.siwp({
+      address: account.address,
+      message,
+      signature,
+    });
+  };
+
+  return <button onClick={handleSignIn}>Sign In with Polkadot</button>;
+}
+```
+
+## With @polkadot/extension-dapp
+
+```tsx
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { authClient } from '@/lib/auth-client';
+
+async function signIn() {
+  await web3Enable('MyApp');
+  const accounts = await web3Accounts();
+  const account = accounts[0];
+
+  const injector = await web3FromAddress(account.address);
+
+  // Get nonce, sign, verify...
+}
+```
+
+See the [examples](/docs/better-siwp/examples) page for complete working examples.

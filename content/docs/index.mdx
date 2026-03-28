@@ -1,0 +1,41 @@
+---
+title: Getting Started
+description: Get started with ZigZag — developer tools for Polkadot SDK chains.
+---
+
+## What is ZigZag?
+
+ZigZag is an ecosystem of JavaScript/TypeScript developer tools for Polkadot SDK chains. It provides simple, typed packages that handle the common needs of Polkadot dApp development.
+
+## Packages
+
+### Published
+
+| Package | Version | Description |
+| --- | --- | --- |
+| [`@zig-zag/chains`](/docs/chains) | v1.1.0 | Typed chain registry with logos, RPCs, genesis hashes |
+| [`@zig-zag/better-siwp`](/docs/better-siwp) | v0.1.2 | Sign In With Polkadot plugin for Better Auth |
+
+### Coming Soon
+
+| Package | Description |
+| --- | --- |
+| `@zig-zag/core` | Framework-agnostic utilities: SS58, denominations, address display |
+| `@zig-zag/react` | React hooks and providers for Dedot, LunoKit, wallet management |
+
+## Quick Install
+
+```bash
+npm i @zig-zag/chains @zig-zag/better-siwp
+```
+
+## Tech Stack
+
+ZigZag is designed to work with the modern Polkadot tooling:
+
+- **[Dedot](https://github.com/dedotdev/dedot)** — Next-gen Polkadot client
+- **[LunoKit](https://github.com/Luno-lab/LunoKit)** — Wallet connection UI
+- **[Better Auth](https://better-auth.com)** — Authentication framework
+- **[PAPI](https://github.com/polkadot-api/polkadot-api)** — Polkadot API (adapter planned)
+
+Not locked to any specific client — works standalone or with any Polkadot library.

@@ -1,0 +1,41 @@
+---
+title: Overview
+description: A typed chain registry for the Polkadot ecosystem.
+---
+
+## @zig-zag/chains
+
+A typed chain registry for Polkadot SDK chains. Provides rich, tree-shakeable metadata for relay chains, system parachains, third-party parachains, and testnets — including named RPC providers, genesis hashes, Subscan integration, light client URLs, and network topology.
+
+Works with [Dedot](https://github.com/dedotdev/dedot), [PAPI](https://github.com/polkadot-api/polkadot-api), [LunoKit](https://github.com/Luno-lab/LunoKit), or standalone.
+
+## Install
+
+```bash
+npm i @zig-zag/chains
+```
+
+## Quick Start
+
+```ts
+import { polkadot } from '@zig-zag/chains';
+
+console.log(polkadot.name);          // "Polkadot"
+console.log(polkadot.rpcs.Dwellir);  // "wss://polkadot-rpc.dwellir.com"
+console.log(polkadot.chainIconUrl);  // base64 SVG data URI
+```
+
+## Features
+
+- **20+ chains** — Polkadot, Kusama, Westend, and popular parachains
+- **Typed exports** — Full TypeScript support with autocomplete
+- **Tree-shakeable** — Only import the chains you use
+- **Logos included** — Base64 SVG data URIs for every chain
+- **Named RPCs** — Provider names instead of anonymous URL arrays
+- **Genesis hashes** — For chain identification
+- **Network topology** — Relay chain, system parachain, parachain, testnet
+
+## Links
+
+- [npm](https://www.npmjs.com/package/@zig-zag/chains)
+- [GitHub](https://github.com/zigzag-js/chains)

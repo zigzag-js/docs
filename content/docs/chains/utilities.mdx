@@ -1,0 +1,40 @@
+---
+title: Utilities
+description: Helper functions provided by @zig-zag/chains.
+---
+
+## Utility Functions
+
+### getChainById
+
+Look up a chain by its ID:
+
+```ts
+import { getChainById } from '@zig-zag/chains';
+
+const chain = getChainById('polkadot');
+console.log(chain?.name); // "Polkadot"
+```
+
+### getChainByGenesisHash
+
+Look up a chain by genesis hash:
+
+```ts
+import { getChainByGenesisHash } from '@zig-zag/chains';
+
+const chain = getChainByGenesisHash('0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3');
+console.log(chain?.name); // "Polkadot"
+```
+
+### allChains
+
+Get all chains as an array:
+
+```ts
+import { allChains } from '@zig-zag/chains';
+
+const relayChains = allChains.filter((c) => c.topology === 'relay');
+const parachains = allChains.filter((c) => c.topology === 'parachain');
+const testnets = allChains.filter((c) => c.topology === 'testnet');
+```

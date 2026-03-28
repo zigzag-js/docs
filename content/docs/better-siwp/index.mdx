@@ -1,0 +1,58 @@
+---
+title: Overview
+description: Sign In With Polkadot — a Better Auth plugin for wallet authentication.
+---
+
+## @zig-zag/better-siwp
+
+Sign In With Polkadot (SIWP) plugin for [Better Auth](https://better-auth.com). Add wallet-based authentication to any Polkadot application with a single plugin.
+
+Built on the [SIWS standard](https://github.com/AuraHQ/siws) by Talisman. Works with [LunoKit](https://github.com/Luno-lab/LunoKit), [Dedot](https://github.com/dedotdev/dedot), `@polkadot/extension-dapp`, or any compatible Polkadot wallet extension.
+
+## Install
+
+```bash
+npm i @zig-zag/better-siwp better-auth
+```
+
+## Quick Start
+
+3 lines on the server. 3 lines on the client.
+
+### Server
+
+```ts
+import { betterAuth } from 'better-auth';
+import { siwp } from '@zig-zag/better-siwp';
+
+export const auth = betterAuth({
+  plugins: [siwp()],
+});
+```
+
+### Client
+
+```ts
+import { createAuthClient } from 'better-auth/client';
+import { siwpClient } from '@zig-zag/better-siwp/client';
+
+export const authClient = createAuthClient({
+  plugins: [siwpClient()],
+});
+```
+
+That's it. Your app now has nonce generation, signature verification, session management, and cookie-based auth — all handled.
+
+## Features
+
+- **3-line setup** — Plugin architecture, minimal config
+- **Any wallet** — Talisman, SubWallet, Polkadot.js, and more
+- **Any chain** — Works with any Substrate chain
+- **Session management** — Cookie-based auth with Better Auth
+- **Type-safe** — Full TypeScript support
+
+## Links
+
+- [npm](https://www.npmjs.com/package/@zig-zag/better-siwp)
+- [GitHub](https://github.com/zigzag-js/better-siwp)
+- [Live Demo](https://better-siwp.vercel.app)

@@ -5,19 +5,25 @@ description: Sign In With Polkadot — a Better Auth plugin for wallet authentic
 
 ## @zig-zag/better-siwp
 
-Sign In With Polkadot (SIWP) plugin for [Better Auth](https://better-auth.com). Add wallet-based authentication to any Polkadot application with a single plugin.
+Sign In With Polkadot (SIWP) plugin for [Better Auth](https://better-auth.com). Add wallet-based authentication to any Polkadot application with a single plugin. Users connect their wallet, sign a message, and get a server-side session.
 
-Built on the [SIWS standard](https://github.com/AuraHQ/siws) by Talisman. Works with [LunoKit](https://github.com/Luno-lab/LunoKit), [Dedot](https://github.com/dedotdev/dedot), `@polkadot/extension-dapp`, or any compatible Polkadot wallet extension.
+Built on the [SIWS standard](https://github.com/TalismanSociety/siws) by Talisman. Works with [LunoKit](https://github.com/Luno-lab/LunoKit), [Dedot](https://github.com/dedotdev/dedot), `@polkadot/extension-dapp`, or any compatible Polkadot wallet extension.
 
 ## Install
 
 ```bash
-npm i @zig-zag/better-siwp better-auth
+npm i @zig-zag/better-siwp
 ```
 
-## Quick Start
+**Peer dependencies:**
 
-3 lines on the server. 3 lines on the client.
+```bash
+npm i better-auth zod
+```
+
+> Requires `better-auth` v1.5.0 or higher. The plugin uses internal APIs that are not available in earlier versions. If you see errors like `deleteVerificationValue is not a function`, check your better-auth version.
+
+## Quick Start
 
 ### Server
 
@@ -26,7 +32,8 @@ import { betterAuth } from 'better-auth';
 import { siwp } from '@zig-zag/better-siwp';
 
 export const auth = betterAuth({
-  plugins: [siwp()],
+  database: yourAdapter,
+  plugins: [siwp({ domain: 'example.com' })],
 });
 ```
 
@@ -43,6 +50,34 @@ export const authClient = createAuthClient({
 
 That's it. Your app now has nonce generation, signature verification, session management, and cookie-based auth — all handled.
 
+## How It Works
+
+```
+1. User clicks "Connect Wallet"
+   └─ Wallet extension shows available accounts
+
+2. User selects an account
+   └─ App calls authClient.siwp.nonce({ walletAddress })
+   └─ Server generates a nonce, stores it (15 min expiry)
+
+3. App builds a SIWS message with the nonce
+   └─ Using SiwsMessage from @talismn/siws
+
+4. User signs the message in their wallet
+   └─ sr25519 signature, private key never leaves the extension
+
+5. App calls authClient.siwp.verify({ message, signature, walletAddress })
+   └─ Server validates: address match, domain match, nonce match
+   └─ Server verifies the cryptographic signature
+   └─ Server creates or finds the user
+   └─ Server creates a session and sets a cookie
+
+6. User is authenticated
+   └─ Session persists across page loads via Better Auth
+```
+
+The nonce is deleted after verification — each signature is single-use (replay protection).
+
 ## Features
 
 - **3-line setup** — Plugin architecture, minimal config
@@ -50,6 +85,39 @@ That's it. Your app now has nonce generation, signature verification, session ma
 - **Any chain** — Works with any Substrate chain
 - **Session management** — Cookie-based auth with Better Auth
 - **Type-safe** — Full TypeScript support
+- **Error handling** — Structured error codes for every failure case
+
+## Error Handling
+
+Verification errors return structured responses with machine-readable error codes:
+
+```ts
+const { data, error } = await authClient.siwp.verify({ message, signature, walletAddress });
+
+if (error) {
+  switch (error.code) {
+    case 'ADDRESS_MISMATCH':
+      // Address in message doesn't match walletAddress
+      break;
+    case 'DOMAIN_MISMATCH':
+      // Domain in message doesn't match server domain
+      break;
+    case 'INVALID_NONCE':
+      // Nonce expired or doesn't match
+      break;
+    case 'INVALID_SIGNATURE':
+      // Wallet signature verification failed
+      break;
+  }
+}
+```
+
+| Error Code | HTTP Status | When |
+| --- | --- | --- |
+| `ADDRESS_MISMATCH` | 400 | Wallet address in SIWS message doesn't match the `walletAddress` parameter |
+| `DOMAIN_MISMATCH` | 400 | Domain in SIWS message doesn't match the server's domain |
+| `INVALID_NONCE` | 401 | Nonce expired (default: 15 min) or was already used |
+| `INVALID_SIGNATURE` | 401 | Cryptographic signature verification failed |
 
 ## Links
 

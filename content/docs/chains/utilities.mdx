@@ -1,19 +1,45 @@
 ---
 title: Utilities
-description: Helper functions provided by @zig-zag/chains.
+description: Helper functions and pre-built groups provided by @zig-zag/chains.
 ---
 
-## Utility Functions
+## Chain Groups
+
+Pre-built arrays for common filtering needs:
+
+```ts
+import {
+  allChains,        // All 20 chains
+  relayChains,      // Polkadot, Kusama, Westend, Paseo
+  systemChains,     // Asset Hub, People, Coretime, Collectives, Bridge Hub
+  parachainChains,  // Astar, Acala, Moonbeam, Phala, Hydration
+  testnetChains,    // Westend, Paseo, Westend Asset Hub, Paseo Asset Hub
+  mainnetChains,    // Everything except testnets
+} from '@zig-zag/chains';
+```
+
+## Lookup Helpers
 
 ### getChainById
 
-Look up a chain by its ID:
+Look up a chain by its numeric ID:
 
 ```ts
 import { getChainById } from '@zig-zag/chains';
 
-const chain = getChainById('polkadot');
+const chain = getChainById(0);
 console.log(chain?.name); // "Polkadot"
+```
+
+### getChainByNetwork
+
+Look up a chain by its network slug:
+
+```ts
+import { getChainByNetwork } from '@zig-zag/chains';
+
+const chain = getChainByNetwork('kusama');
+console.log(chain?.name); // "Kusama"
 ```
 
 ### getChainByGenesisHash
@@ -27,14 +53,22 @@ const chain = getChainByGenesisHash('0x91b171bb158e2d3848fa23a9f1c25182fb8e20313
 console.log(chain?.name); // "Polkadot"
 ```
 
-### allChains
+All lookups return `Chain | undefined`.
 
-Get all chains as an array:
+## Define Custom Chains
+
+Use `defineChain` to create chain objects that satisfy the `Chain` interface with full type inference:
 
 ```ts
-import { allChains } from '@zig-zag/chains';
+import { defineChain } from '@zig-zag/chains';
 
-const relayChains = allChains.filter((c) => c.topology === 'relay');
-const parachains = allChains.filter((c) => c.topology === 'parachain');
-const testnets = allChains.filter((c) => c.topology === 'testnet');
+const myChain = defineChain({
+  id: 99999,
+  name: 'My Chain',
+  network: 'my-chain',
+  genesisHash: '0xabcdef...',
+  ss58Format: 42,
+  nativeCurrency: { name: 'My Token', symbol: 'MYT', decimals: 12 },
+  rpcUrls: { default: 'wss://rpc.my-chain.io' },
+});
 ```

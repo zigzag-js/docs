@@ -6,8 +6,10 @@ description: Set up the SIWP client plugin for wallet authentication.
 ## Installation
 
 ```bash
-npm i @zig-zag/better-siwp better-auth
+npm i @zig-zag/better-siwp better-auth @talismn/siws
 ```
+
+> You can also import `siwpClient` from `@zig-zag/better-siwp/client` to avoid bundling server-side code (like `@talismn/siws` and `zod`) in your client bundle. Both imports export the same `siwpClient`.
 
 ## Basic Setup
 
@@ -22,69 +24,136 @@ export const authClient = createAuthClient({
 });
 ```
 
-## Sign In Flow
+## Client Methods
 
-The client exposes a `signIn` method for SIWP:
+After adding `siwpClient()`, you get two methods on `authClient.siwp`:
 
 ```ts
-const result = await authClient.signIn.siwp({
-  address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-  message: signedMessage,
-  signature: signature,
+// Request a nonce (configurable expiry, single use)
+const { data, error } = await authClient.siwp.nonce({
+  walletAddress: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
 });
+// data: { nonce: string }
+
+// Verify a signed message and create a session
+const { data, error } = await authClient.siwp.verify({
+  message: '...',          // The prepared SIWS message string
+  signature: '0x...',      // The wallet signature
+  walletAddress: '5Grw...', // The signing address
+});
+// data: { token: string, success: boolean, user: { id: string, walletAddress: string } }
 ```
 
-## With LunoKit
+## With LunoKit (Recommended)
 
-If you're using [LunoKit](https://github.com/Luno-lab/LunoKit) for wallet connection:
+[LunoKit](https://github.com/Luno-lab/LunoKit) handles wallet connection and provides a `useSignMessage` hook that pairs perfectly with this plugin.
 
-```tsx
-import { useAccounts, useSignMessage } from '@luno-kit/react';
+```bash
+npm i @luno-kit/react @luno-kit/ui @tanstack/react-query @talismn/siws
+```
+
+### Sign-in function
+
+```ts title="lib/auth/polkadot-auth-client.ts"
+import { SiwsMessage } from '@talismn/siws';
 import { authClient } from '@/lib/auth-client';
 
-function SignInButton() {
-  const accounts = useAccounts();
-  const { signMessage } = useSignMessage();
+export async function signInWithPolkadot(
+  address: string,
+  signMessage: (params: { message: string }) => Promise<{ signature: string }>
+) {
+  // 1. Get a nonce from the server
+  const { data } = await authClient.siwp.nonce({ walletAddress: address });
 
-  const handleSignIn = async () => {
-    const account = accounts[0];
-    if (!account) return;
+  // 2. Build a SIWS message
+  const siwsMessage = new SiwsMessage({
+    domain: window.location.host,
+    address,
+    statement: 'Sign in with your Polkadot wallet',
+    uri: window.location.origin,
+    version: '1.0.0',
+    nonce: data.nonce,
+    issuedAt: Date.now(),
+    expirationTime: Date.now() + 24 * 60 * 60 * 1000,
+  });
+  const message = siwsMessage.prepareMessage();
 
-    // 1. Get nonce from server
-    const { nonce } = await authClient.siwp.getNonce();
+  // 3. Sign via LunoKit's useSignMessage hook
+  const { signature } = await signMessage({ message });
 
-    // 2. Sign the message with wallet
-    const { message, signature } = await signMessage({
-      address: account.address,
-      nonce,
-    });
+  // 4. Verify with the server — session cookie is set automatically
+  await authClient.siwp.verify({ message, signature, walletAddress: address });
+}
+```
 
-    // 3. Verify and create session
-    await authClient.signIn.siwp({
-      address: account.address,
-      message,
-      signature,
-    });
-  };
+### React component
 
-  return <button onClick={handleSignIn}>Sign In with Polkadot</button>;
+```tsx
+import { useAccount, useSignMessage } from '@luno-kit/react';
+import { useConnectModal } from '@luno-kit/ui';
+import { signInWithPolkadot } from '@/lib/auth/polkadot-auth-client';
+
+function AuthButton() {
+  const { account } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { open: openConnectModal } = useConnectModal();
+
+  if (!account) {
+    return <button onClick={openConnectModal}>Connect Wallet</button>;
+  }
+
+  return (
+    <button onClick={() => signInWithPolkadot(account.address, signMessageAsync)}>
+      Sign In
+    </button>
+  );
 }
 ```
 
 ## With @polkadot/extension-dapp
 
-```tsx
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+If you prefer to work with the Polkadot.js extension APIs directly:
+
+```bash
+npm i @polkadot/extension-dapp @talismn/siws
+```
+
+```ts
+import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp';
+import { SiwsMessage } from '@talismn/siws';
 import { authClient } from '@/lib/auth-client';
 
 async function signIn() {
-  await web3Enable('MyApp');
+  // 1. Connect to wallet extensions
+  await web3Enable('My App');
   const accounts = await web3Accounts();
   const account = accounts[0];
 
-  const injector = await web3FromAddress(account.address);
+  // 2. Get nonce
+  const { data } = await authClient.siwp.nonce({ walletAddress: account.address });
 
-  // Get nonce, sign, verify...
+  // 3. Build and sign the message
+  const siwsMessage = new SiwsMessage({
+    domain: window.location.host,
+    address: account.address,
+    statement: 'Sign in with your Polkadot wallet',
+    uri: window.location.origin,
+    version: '1.0.0',
+    nonce: data.nonce,
+    issuedAt: Date.now(),
+    expirationTime: Date.now() + 24 * 60 * 60 * 1000,
+  });
+  const message = siwsMessage.prepareMessage();
+
+  const injector = await web3FromAddress(account.address);
+  const { signature } = await injector.signer.signRaw!({
+    address: account.address,
+    data: message,
+    type: 'bytes',
+  });
+
+  // 4. Verify — session is created server-side
+  await authClient.siwp.verify({ message, signature, walletAddress: account.address });
 }
 ```
 

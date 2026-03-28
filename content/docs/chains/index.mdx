@@ -20,9 +20,9 @@ npm i @zig-zag/chains
 ```ts
 import { polkadot } from '@zig-zag/chains';
 
-console.log(polkadot.name);          // "Polkadot"
-console.log(polkadot.rpcs.Dwellir);  // "wss://polkadot-rpc.dwellir.com"
-console.log(polkadot.chainIconUrl);  // base64 SVG data URI
+console.log(polkadot.name);              // "Polkadot"
+console.log(polkadot.rpcUrls.dwellir);   // "wss://polkadot-rpc.n.dwellir.com"
+console.log(polkadot.chainIconUrl);      // base64 SVG data URI
 ```
 
 ## Features
@@ -33,7 +33,7 @@ console.log(polkadot.chainIconUrl);  // base64 SVG data URI
 - **Logos included** — Base64 SVG data URIs for every chain
 - **Named RPCs** — Provider names instead of anonymous URL arrays
 - **Genesis hashes** — For chain identification
-- **Network topology** — Relay chain, system parachain, parachain, testnet
+- **Pre-built groups** — `relayChains`, `systemChains`, `parachainChains`, `testnetChains`, `mainnetChains`
 
 ## Links
 

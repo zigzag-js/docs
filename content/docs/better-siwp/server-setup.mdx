@@ -7,11 +7,12 @@ description: Configure the SIWP plugin on your server with Better Auth.
 
 - A Better Auth instance ([setup guide](https://www.better-auth.com/docs/installation))
 - A database adapter configured with Better Auth (Drizzle, Prisma, etc.)
+- `better-auth` v1.5.0 or higher
 
 ## Installation
 
 ```bash
-npm i @zig-zag/better-siwp better-auth
+npm i @zig-zag/better-siwp better-auth zod
 ```
 
 ## Basic Setup
@@ -23,10 +24,12 @@ import { betterAuth } from 'better-auth';
 import { siwp } from '@zig-zag/better-siwp';
 
 export const auth = betterAuth({
-  database: {
-    // your database adapter
-  },
-  plugins: [siwp()],
+  database: yourAdapter,
+  plugins: [
+    siwp({
+      domain: 'example.com',
+    }),
+  ],
 });
 ```
 
@@ -36,29 +39,75 @@ The `siwp()` plugin accepts an optional config object:
 
 ```ts
 siwp({
-  // Custom statement shown in the signing prompt
-  statement: 'Sign in to MyApp',
+  // Optional: your domain without protocol
+  // If not set, auto-detected from the request Origin header
+  domain: 'example.com',
 
-  // Domain for the SIWS message (auto-detected by default)
-  domain: 'myapp.com',
+  // Optional: nonce lifetime in seconds (default: 900 = 15 minutes)
+  nonceExpiresIn: 600, // 10 minutes
+
+  // Optional: custom nonce generation
+  getNonce: async () => {
+    return crypto.randomUUID();
+  },
+
+  // Optional: custom signature verification
+  verifyMessage: async ({ message, signature, address }) => {
+    // Your custom logic — return true if valid
+    return true;
+  },
+
+  // Optional: extract user info from the wallet
+  getUserInfo: async ({ message, address, signature }) => {
+    return {
+      name: 'Alice',
+      email: 'alice@example.com',
+      image: 'https://example.com/avatar.png',
+    };
+  },
+
+  // Optional: domain for generated email addresses
+  // Default: uses the resolved domain (e.g., "5Grw...@example.com")
+  emailDomainName: 'users.example.com',
 })
 ```
 
 ### Options
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `statement` | `string` | `"Sign in with Polkadot"` | Message shown in the wallet signing prompt |
-| `domain` | `string` | Auto-detected from request | Domain for the SIWS message |
+| Option | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `domain` | `string` | No | Auto-detected from `Origin` or `Host` header | Domain for the SIWS message |
+| `nonceExpiresIn` | `number` | No | `900` (15 minutes, in seconds) | Nonce lifetime in seconds |
+| `getNonce` | `() => Promise<string>` | No | Random alphanumeric string | Custom nonce generation |
+| `verifyMessage` | `(params) => Promise<boolean>` | No | `verifySIWS` from @talismn/siws | Custom signature verification |
+| `getUserInfo` | `(params) => Promise<UserInfo>` | No | Name from truncated address | Extract user info from the wallet |
+| `emailDomainName` | `string` | No | Same as resolved `domain` | Domain for generated email addresses |
+
+> When your API and frontend run on different ports (e.g., API on 3001, frontend on 3000), the domain is auto-detected from the `Origin` header sent by the browser. If you need explicit control, set the `domain` option.
+
+## Server Exports
+
+```ts
+import { siwp, parseMessage, verifySIWS } from '@zig-zag/better-siwp';
+import type { SIWPOptions, SiwsMessage } from '@zig-zag/better-siwp';
+```
+
+| Export | Description |
+| --- | --- |
+| `siwp(options)` | Better Auth server plugin |
+| `parseMessage(message)` | Parse a SIWS message string (re-exported from @talismn/siws) |
+| `verifySIWS(message, signature, address)` | Verify a SIWS signature (re-exported from @talismn/siws) |
+| `SIWPOptions` | Plugin configuration type |
+| `SiwsMessage` | SIWS message type |
 
 ## API Routes
 
-The plugin adds these endpoints to your Better Auth instance:
+The plugin registers two endpoints on your Better Auth instance. Both use `POST`:
 
-| Endpoint | Method | Description |
-| --- | --- | --- |
-| `/api/auth/siwp/nonce` | `GET` | Generate a nonce for signing |
-| `/api/auth/siwp/verify` | `POST` | Verify signature and create session |
+| Endpoint | Method | Body | Response |
+| --- | --- | --- | --- |
+| `/api/auth/siwp/nonce` | `POST` | `{ walletAddress: string }` | `{ nonce: string }` |
+| `/api/auth/siwp/verify` | `POST` | `{ message: string, signature: string, walletAddress: string }` | `{ token: string, success: boolean, user: { id: string, walletAddress: string } }` |
 
 ## Next.js App Router
 

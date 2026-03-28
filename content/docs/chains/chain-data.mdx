@@ -9,37 +9,77 @@ Every chain export conforms to the `Chain` interface:
 
 ```ts
 interface Chain {
-  id: string;
+  // Required
+  id: number;
+  name: string;
+  network: string;
+  genesisHash: HexString;
+  ss58Format: number;
+  nativeCurrency: Currency;
+  rpcUrls: Record<string, string> & { default: string };
+
+  // Optional
+  paraId?: number;
+  relay?: boolean;
+  testnet?: boolean;
+  ethereum?: boolean;
+  relayChain?: string;
+  signType?: "sr25519" | "ed25519" | "secp256k1";
+  httpUrls?: Record<string, string>;
+  lightClientUrls?: Record<string, string> & { default: string };
+  website?: string;
+  chainIconUrl?: string;
+  blockExplorers?: Record<string, BlockExplorer> & { default: BlockExplorer };
+  subscan?: SubscanConfig;
+}
+
+interface Currency {
   name: string;
   symbol: string;
   decimals: number;
-  ss58Format: number;
-  genesisHash: string;
-  chainIconUrl?: string;
-  rpcs: Record<string, string>;
-  subscanUrl?: string;
-  lightClientUrl?: string;
-  topology: 'relay' | 'system' | 'parachain' | 'testnet';
-  relay?: string;
 }
+
+interface BlockExplorer {
+  name: string;
+  url: string;
+}
+
+interface SubscanConfig {
+  url: string;
+  api: string;
+}
+
+type HexString = `0x${string}`;
 ```
 
-## Fields
+## Required Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | `string` | Unique chain identifier (e.g. `"polkadot"`) |
-| `name` | `string` | Human-readable name |
-| `symbol` | `string` | Native token symbol |
-| `decimals` | `number` | Token decimal places |
-| `ss58Format` | `number` | SS58 address prefix |
-| `genesisHash` | `string` | Genesis block hash |
-| `chainIconUrl` | `string` | Base64 SVG data URI for the chain logo |
-| `rpcs` | `Record<string, string>` | Named RPC endpoints |
-| `subscanUrl` | `string` | Subscan explorer URL |
-| `lightClientUrl` | `string` | Smoldot light client chain spec URL |
-| `topology` | `string` | Network role: relay, system, parachain, or testnet |
-| `relay` | `string` | Parent relay chain ID (for parachains) |
+| `id` | `number` | Unique numeric identifier |
+| `name` | `string` | Human-readable chain name |
+| `network` | `string` | URL-safe slug (e.g. `"polkadot"`, `"kusama-asset-hub"`) |
+| `genesisHash` | `` `0x${string}` `` | Genesis block hash |
+| `ss58Format` | `number` | SS58 address encoding prefix |
+| `nativeCurrency` | `Currency` | Token name, symbol (2-6 chars), and decimals |
+| `rpcUrls` | `Record<string, string>` | Named WebSocket RPC providers with a required `default` key |
+
+## Optional Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `paraId` | `number` | Parachain ID on the relay chain |
+| `relay` | `boolean` | Whether this is a relay chain |
+| `testnet` | `boolean` | Whether this is a test network |
+| `ethereum` | `boolean` | Whether this chain is EVM-compatible |
+| `relayChain` | `string` | Parent relay chain slug (for parachains) |
+| `signType` | `"sr25519" \| "ed25519" \| "secp256k1"` | Default signing curve |
+| `httpUrls` | `Record<string, string>` | Named HTTP RPC endpoints |
+| `lightClientUrls` | `Record<string, string>` | Substrate Connect light client URLs |
+| `website` | `string` | Project website URL |
+| `chainIconUrl` | `string` | Chain logo URL or data URI |
+| `blockExplorers` | `Record<string, BlockExplorer>` | Named block explorers with a `default` key |
+| `subscan` | `SubscanConfig` | Subscan web URL (`url`) and API URL (`api`) |
 
 ## Supported Chains
 

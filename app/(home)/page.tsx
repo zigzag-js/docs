@@ -43,7 +43,7 @@ const clientCode = `<span class="text-[#E6007A]">import</span> <span class="text
 const chainsCode = `<span class="text-[#E6007A]">import</span> <span class="text-white/90">{ polkadot, moonbeam }</span> <span class="text-[#E6007A]">from</span> <span class="text-[#a8e6a1]">'@zig-zag/chains'</span>;
 
 <span class="text-white/60">polkadot</span>.<span class="text-white/90">name</span>          <span class="text-white/30">// "Polkadot"</span>
-<span class="text-white/60">polkadot</span>.<span class="text-white/90">rpcs.Dwellir</span>  <span class="text-white/30">// "wss://polkadot-rpc.dwellir.com"</span>
+<span class="text-white/60">polkadot</span>.<span class="text-white/90">rpcUrls.dwellir</span>  <span class="text-white/30">// "wss://polkadot-rpc.n.dwellir.com"</span>
 <span class="text-white/60">polkadot</span>.<span class="text-white/90">chainIconUrl</span>  <span class="text-white/30">// base64 SVG data URI</span>
 <span class="text-white/60">polkadot</span>.<span class="text-white/90">genesisHash</span>   <span class="text-white/30">// "0x91b171bb..."</span>
 <span class="text-white/60">moonbeam</span>.<span class="text-white/90">decimals</span>      <span class="text-white/30">// 18</span>`;

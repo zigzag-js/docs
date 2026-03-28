@@ -56,10 +56,21 @@ cd better-siwp
 # Install dependencies
 pnpm install
 
+# Build the plugin first
+pnpm build:package
+
 # Set up environment
 cp examples/nextjs-lunokit/.env.example examples/nextjs-lunokit/.env
 # Edit .env with your DATABASE_URL and BETTER_AUTH_SECRET
 
-# Run the example
-pnpm --filter nextjs-lunokit dev
+# Run the LunoKit example
+pnpm dev:lunokit
+
+# Or run the extension-dapp example
+pnpm dev
+
+# Run tests
+pnpm test
 ```
+
+Both examples include a polished dark-themed UI with Polkadot identicons, wallet connection, session persistence, and sign-out.

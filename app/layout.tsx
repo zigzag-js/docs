@@ -1,4 +1,6 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { DM_Sans, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
@@ -65,6 +67,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     >
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <RootProvider>{children}</RootProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     title: 'ZigZag — Developer Tools for Polkadot',
     description:
       'Simple, typed developer tools for Polkadot SDK chains. Chain registry, wallet auth, React hooks, and more.',
+    images: '/og/home',
   },
   twitter: {
     card: 'summary_large_image',

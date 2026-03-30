@@ -52,6 +52,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       title: page.data.title,
       description: page.data.description,
       type: 'article',
+      images: params.slug?.length ? `/og/docs/${params.slug.join('/')}` : '/og/home',
     },
   };
 }

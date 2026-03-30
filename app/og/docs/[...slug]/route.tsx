@@ -20,13 +20,12 @@ export async function GET(_req: Request, props: RouteProps) {
     readFile(join(process.cwd(), 'assets/fonts/DMSans-Medium.ttf')),
   ]);
 
-  // Determine which package section this belongs to
   const section = slug[0];
   const sectionLabels: Record<string, string> = {
     chains: '@zig-zag/chains',
     'better-siwp': '@zig-zag/better-siwp',
   };
-  const sectionLabel = sectionLabels[section] ?? 'ZigZag Docs';
+  const sectionLabel = sectionLabels[section] ?? 'zigzag docs';
 
   return new ImageResponse(
     (
@@ -36,14 +35,15 @@ export async function GET(_req: Request, props: RouteProps) {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'center',
           padding: '60px 72px',
           background: '#0c0c12',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Pink glow top-right */}
+        {/* Pink glow */}
         <div
           style={{
             position: 'absolute',
@@ -58,8 +58,8 @@ export async function GET(_req: Request, props: RouteProps) {
           }}
         />
 
-        {/* Top: Logo + wordmark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="36"
@@ -81,61 +81,65 @@ export async function GET(_req: Request, props: RouteProps) {
           </span>
         </div>
 
-        {/* Center: Section label + Page title */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <span
-            style={{
-              fontFamily: 'DM Sans',
-              fontSize: '22px',
-              fontWeight: 500,
-              color: '#E6007A',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {sectionLabel}
-          </span>
-          <span
-            style={{
-              fontFamily: 'Space Grotesk',
-              fontSize: '64px',
-              fontWeight: 700,
-              color: '#f5f5f5',
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
-              maxWidth: '900px',
-            }}
-          >
-            {page.data.title}
-          </span>
-          {page.data.description && (
-            <span
-              style={{
-                fontFamily: 'DM Sans',
-                fontSize: '24px',
-                fontWeight: 500,
-                color: '#777',
-                maxWidth: '800px',
-              }}
-            >
-              {page.data.description}
-            </span>
-          )}
-        </div>
+        {/* Section label */}
+        <span
+          style={{
+            fontFamily: 'DM Sans',
+            fontSize: '22px',
+            fontWeight: 500,
+            color: '#E6007A',
+            marginBottom: '16px',
+          }}
+        >
+          {sectionLabel}
+        </span>
 
-        {/* Bottom: domain */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {/* Page title */}
+        <span
+          style={{
+            fontFamily: 'Space Grotesk',
+            fontSize: '64px',
+            fontWeight: 700,
+            color: '#f5f5f5',
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
+            textAlign: 'center',
+            maxWidth: '900px',
+          }}
+        >
+          {page.data.title}
+        </span>
+
+        {page.data.description && (
           <span
             style={{
               fontFamily: 'DM Sans',
-              fontSize: '20px',
+              fontSize: '24px',
               fontWeight: 500,
-              color: '#555',
+              color: '#777',
+              marginTop: '20px',
+              textAlign: 'center',
+              maxWidth: '800px',
             }}
           >
-            zigzag.js.org
+            {page.data.description}
           </span>
-        </div>
+        )}
+
+        {/* Domain bottom-right */}
+        <span
+          style={{
+            position: 'absolute',
+            bottom: '40px',
+            right: '60px',
+            fontFamily: 'DM Sans',
+            fontSize: '20px',
+            fontWeight: 500,
+            color: '#555',
+          }}
+        >
+          zigzag.js.org
+        </span>
       </div>
     ),
     {

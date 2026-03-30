@@ -18,14 +18,15 @@ export async function GET() {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'center',
           padding: '60px 72px',
           background: '#0c0c12',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Pink glow top-right */}
+        {/* Pink glow */}
         <div
           style={{
             position: 'absolute',
@@ -38,7 +39,7 @@ export async function GET() {
             display: 'flex',
           }}
         />
-        {/* Purple glow bottom-left */}
+        {/* Purple glow */}
         <div
           style={{
             position: 'absolute',
@@ -52,12 +53,12 @@ export async function GET() {
           }}
         />
 
-        {/* Top: Logo + wordmark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="40"
-            height="24"
+            width="44"
+            height="26"
             viewBox="0 0 50 30"
             fill="#E6007A"
           >
@@ -66,7 +67,7 @@ export async function GET() {
           <span
             style={{
               fontFamily: 'Space Grotesk',
-              fontSize: '28px',
+              fontSize: '30px',
               fontWeight: 700,
               color: '#f5f5f5',
             }}
@@ -75,8 +76,8 @@ export async function GET() {
           </span>
         </div>
 
-        {/* Center: Headline */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Headline */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <span
             style={{
               fontFamily: 'Space Grotesk',
@@ -85,6 +86,7 @@ export async function GET() {
               color: '#f5f5f5',
               lineHeight: 1.1,
               letterSpacing: '-0.03em',
+              textAlign: 'center',
             }}
           >
             Developer tools for
@@ -97,41 +99,40 @@ export async function GET() {
               color: '#E6007A',
               lineHeight: 1.1,
               letterSpacing: '-0.03em',
+              textAlign: 'center',
             }}
           >
             Polkadot
           </span>
-          <span
-            style={{
-              fontFamily: 'DM Sans',
-              fontSize: '26px',
-              fontWeight: 500,
-              color: '#888',
-              marginTop: '8px',
-            }}
-          >
-            Chain registry, wallet auth, React hooks — typed and ready to use.
-          </span>
         </div>
 
-        {/* Bottom: domain */}
-        <div
+        <span
           style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
+            fontFamily: 'DM Sans',
+            fontSize: '26px',
+            fontWeight: 500,
+            color: '#888',
+            marginTop: '24px',
+            textAlign: 'center',
           }}
         >
-          <span
-            style={{
-              fontFamily: 'DM Sans',
-              fontSize: '20px',
-              fontWeight: 500,
-              color: '#555',
-            }}
-          >
-            zigzag.js.org
-          </span>
-        </div>
+          Chain registry, wallet auth, React hooks — typed and ready to use.
+        </span>
+
+        {/* Domain bottom-right */}
+        <span
+          style={{
+            position: 'absolute',
+            bottom: '40px',
+            right: '60px',
+            fontFamily: 'DM Sans',
+            fontSize: '20px',
+            fontWeight: 500,
+            color: '#555',
+          }}
+        >
+          zigzag.js.org
+        </span>
       </div>
     ),
     {

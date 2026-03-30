@@ -53,7 +53,7 @@ export async function GET(_req: Request, props: RouteProps) {
             height: '500px',
             borderRadius: '50%',
             background:
-              'radial-gradient(circle, rgba(230,0,122,0.10) 0%, transparent 70%)',
+              'radial-gradient(circle, rgba(230,0,122,0.04) 0%, transparent 70%)',
             display: 'flex',
           }}
         />

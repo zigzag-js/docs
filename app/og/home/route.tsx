@@ -35,7 +35,7 @@ export async function GET() {
             width: '600px',
             height: '600px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(230,0,122,0.12) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(230,0,122,0.05) 0%, transparent 70%)',
             display: 'flex',
           }}
         />
@@ -48,7 +48,7 @@ export async function GET() {
             width: '500px',
             height: '500px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(85,43,191,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(85,43,191,0.03) 0%, transparent 70%)',
             display: 'flex',
           }}
         />

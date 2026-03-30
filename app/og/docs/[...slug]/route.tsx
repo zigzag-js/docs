@@ -43,21 +43,6 @@ export async function GET(_req: Request, props: RouteProps) {
           overflow: 'hidden',
         }}
       >
-        {/* Pink glow */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-150px',
-            right: '-50px',
-            width: '500px',
-            height: '500px',
-            borderRadius: '50%',
-            background:
-              'radial-gradient(circle, rgba(230,0,122,0.04) 0%, transparent 70%)',
-            display: 'flex',
-          }}
-        />
-
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
           <svg

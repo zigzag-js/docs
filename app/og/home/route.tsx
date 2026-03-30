@@ -26,33 +26,6 @@ export async function GET() {
           overflow: 'hidden',
         }}
       >
-        {/* Pink glow */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-200px',
-            right: '-100px',
-            width: '600px',
-            height: '600px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(230,0,122,0.05) 0%, transparent 70%)',
-            display: 'flex',
-          }}
-        />
-        {/* Purple glow */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '-200px',
-            left: '-100px',
-            width: '500px',
-            height: '500px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(85,43,191,0.03) 0%, transparent 70%)',
-            display: 'flex',
-          }}
-        />
-
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px' }}>
           <svg

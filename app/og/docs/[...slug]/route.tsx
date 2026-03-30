@@ -27,6 +27,13 @@ export async function GET(_req: Request, props: RouteProps) {
   };
   const sectionLabel = sectionLabels[section] ?? 'zigzag docs';
 
+  // For overview pages, use the description as the title instead of "Overview"
+  const isOverview = page.data.title === 'Overview';
+  const displayTitle = isOverview
+    ? (page.data.description ?? page.data.title)
+    : page.data.title;
+  const displayDescription = isOverview ? undefined : page.data.description;
+
   return new ImageResponse(
     (
       <div
@@ -92,10 +99,10 @@ export async function GET(_req: Request, props: RouteProps) {
             maxWidth: '900px',
           }}
         >
-          {page.data.title}
+          {displayTitle}
         </span>
 
-        {page.data.description && (
+        {displayDescription && (
           <span
             style={{
               fontFamily: 'DM Sans',
@@ -107,7 +114,7 @@ export async function GET(_req: Request, props: RouteProps) {
               maxWidth: '800px',
             }}
           >
-            {page.data.description}
+            {displayDescription}
           </span>
         )}
 

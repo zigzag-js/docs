@@ -4,8 +4,13 @@ export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       title: (
-        <span className="font-[family-name:var(--font-display)] text-lg font-bold">
-          ZigZag
+        <span className="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="14" viewBox="0 0 50 30" fill="currentColor">
+            <path fillRule="nonzero" d="M31.085 19.326L24.615 15l-6.468 4.326L11.677 15 0 22.81 4.811 30l6.866-4.591 6.47 4.325 6.469-4.325 6.469 4.326 6.469-4.326L44.42 30l4.81-7.191L37.555 15zM11.677 10.409l6.47 4.326 6.469-4.326 6.469 4.326 6.469-4.326L44.42 15l4.81-7.191L37.555 0l-6.47 4.326L24.617 0l-6.47 4.326L11.678 0 0 7.81 4.811 15z"/>
+          </svg>
+          <span className="font-[family-name:var(--font-display)] text-lg font-bold">
+            ZigZag
+          </span>
         </span>
       ),
     },

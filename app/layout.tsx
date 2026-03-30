@@ -30,7 +30,10 @@ export const metadata: Metadata = {
   },
   description:
     'Simple, typed developer tools for Polkadot SDK chains. Chain registry, wallet auth, React hooks, and more.',
-  metadataBase: new URL('https://zig-zag.js.org'),
+  metadataBase: new URL('https://zigzag.js.org'),
+  icons: {
+    icon: '/icon.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
